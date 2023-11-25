@@ -24,12 +24,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 // Items array to store the to-do list items.
-const items = ["Buy Food", "Cook Food", "Eat Food"];
+const items = ["Tarea de Javier", "Tarea de Amadeo", "Tarea de Raul"];
 
 // Separate array to store work-related to-do items.
 const workItems = [];
 
-let userName = "pepito"
+let userName = "Palomé"
 
 // Define a route handler for the root route (homepage).
 app.get("/", function (req, res) {
@@ -47,11 +47,11 @@ app.post("/", function (req, res) {
   const item = req.body.newItem;
 
   // Check if the POST request came from the 'Work' list form.
-  if (req.body.list === "Work") {
+  if (req.body.list === "Trabajo") {
     // If it is from 'Work', add the item to the workItems array.
     workItems.push(item);
     // Redirect to the '/work' route which will trigger the GET handler for that route.
-    res.redirect("/work");
+    res.redirect("/Trabajo");
   } else {
     // If it is from the main list, add the item to the items array.
     items.push(item);
@@ -69,7 +69,7 @@ app.post("/submit-name", function (req, res) {
 }
 );
 // Define a GET route handler for the '/work' route.
-app.get("/work", function (req, res) {
+app.get("/Trabajo", function (req, res) {
   // Render the 'list' template with 'Work List' as the title and the workItems array for the list items.
   res.render("list", { listTitle: "Work List", newListItems: workItems });
 });
