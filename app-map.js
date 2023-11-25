@@ -12,6 +12,7 @@ app.use(express.static("public"));
 const items = new Map();
 const workItems = new Map();
 const completedItems = new Map();
+const deletedItems = new Map();
 global.lists = {}; // Global object to store lists
 
 // Initial items
@@ -51,14 +52,20 @@ app.get("/work", function (req, res) {
 app.post("/delete", function (req, res) {
   const uidToDelete = req.body.uid;
   const listName = req.body.listName;
+  let deletedItem;
 
   if (listName === "Work") {
+    deletedItem = workItems.get(uidToDelete);
     workItems.delete(uidToDelete);
-    res.redirect("/work");
   } else {
+    deletedItem = items.get(uidToDelete);
     items.delete(uidToDelete);
-    res.redirect("/");
   }
+
+  // Add the deleted item to the deletedItems map
+  deletedItems.set(uidToDelete, deletedItem);
+
+  res.redirect("/");
 });
 
 // Edit route handler
@@ -103,6 +110,14 @@ app.post("/addList", function (req, res) {
   global.lists[newListName] = new Map();
   res.redirect("/");
 });
+
+// Deleted items route handler
+app.get("/deleted", function (req, res) {
+  const deletedList = Array.from(deletedItems, ([uid, text]) => ({ uid, text }));
+  res.render("deleted", { deletedList });
+});
+
+// ... (Rest of the existing code)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
